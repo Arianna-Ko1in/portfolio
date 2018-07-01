@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fk-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fk-frontend
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 50%
+      maxSurge: 50%
+  template:
+    metadata:
+      labels:
+        app: fk-frontend
+    spec:
+      containers:
+      - name: qr-backend
+        image: "git.herzen.spb.ru:1443/aakalinina/detsad2:BRANCH"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 3000
+      imagePullSecrets:
+      - name: regsecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: fk-frontend
+  name: fk-frontend
+spec:
+  ports:
+    - name: web
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: fk-frontend
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: fk
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: dkfp.herzen.spb.ru
+    http:
+      paths:
+        - backend:
+            serviceName: fk-frontend
+            servicePort: 3000
+          path: /

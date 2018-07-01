@@ -1,0 +1,25 @@
+//Пункт меню
+$navbar-item-color: white;
+//наложение на пункт меню
+$navbar-item-hover-background-color: inherit;
+
+//Подложка для подменю
+$navbar-dropdown-background-color: #209cee;
+$navbar-dropdown-item-hover-color: white;
+$navbar-dropdown-item-hover-background-color: #3574ff;
+
+//Таблицы
+$table-cell-padding: 1em 1.2em;
+
+//Выделение активного пункта в меню
+$menu-item-active-background-color: #e4e4e4;
+$menu-item-active-color: #1b3164;
+
+
+@import "sass/utilities/_all";
+@import "sass/base/_all";
+@import "sass/grid/_all";
+@import "sass/layout/_all";
+@import "sass/elements/_all";
+@import "sass/components/_all";
+

@@ -1,0 +1,24 @@
+image: git.herzen.spb.ru:1443/docker/kub
+
+stages:
+  - build
+  - deploy
+  - deliver
+
+build-fe:
+  stage: build
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build --no-cache=false --pull=false -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA -f Dockerfile .
+
+deploy-fe:
+  stage: deploy
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
+deliver:
+  stage: deliver
+  script:
+    - sed -i "s/BRANCH/$CI_COMMIT_SHA/ig" deploy.yaml
+    - kubectl apply -f deploy.yaml
